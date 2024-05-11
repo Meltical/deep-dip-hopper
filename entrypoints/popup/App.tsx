@@ -1,31 +1,38 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
-import { DPP_Player, fetchPlayerList } from "./api"
+import { DPP_Player, fetchPlayerList, IProfileDictionary, storage_profiles } from "./api"
 import { Player } from "./Player"
 
-export const App = () => {
-	return <Body />
-}
-
-const Body = () => {
+const useAppController = () => {
 	const [players, setPlayers] = useState<DPP_Player[]>([])
-	const refreshPlayers = async () => {
+	const [profiles, setProfiles] = useState<IProfileDictionary>({})
+	const loadPlayers = async () => {
 		const player_list = await fetchPlayerList()
 		setPlayers(player_list)
 	}
+	const loadProfilesFromStorage = async () => {
+		const profiles = await storage_profiles.getValue()
+		setProfiles(profiles || {})
+	}
 	useEffect(() => {
-		refreshPlayers()
+		loadPlayers()
+		loadProfilesFromStorage()
 	}, [])
+	return { players, profiles, loadPlayers }
+}
+
+export const App = () => {
+	const { players, profiles, loadPlayers } = useAppController()
 	return (
 		<Container>
-			<Button onClick={refreshPlayers}>Refresh</Button>
+			<Button onClick={loadPlayers}>Refresh</Button>
 			{players.length > 0 && (
 				<>
-					<Player player={players[0]} />
+					<Player player={players[0]} cachedTwitchId={profiles[players[0].user_id]} />
 					<Divider />
 					{players.slice(1).map((player) => (
 						<React.Fragment key={player.user_id}>
-							<Player player={player} />
+							<Player player={player} cachedTwitchId={profiles[player.user_id]} />
 						</React.Fragment>
 					))}
 				</>
