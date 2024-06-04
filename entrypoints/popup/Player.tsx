@@ -31,6 +31,8 @@ export const Player = (props: PlayerProps) => {
 		<Container onClick={handleClick} $has_no_twitch={has_no_twitch}>
 			<Name>{player.display_name}</Name>
 			<EndRow>
+				<Height>{Math.abs(player.height / 100 - 1).toFixed(0)}</Height>
+				<Separator />
 				<Height>{player.height.toFixed(0)}</Height>
 				{has_no_twitch ? (
 					<span className="material-symbols-outlined">close</span>
@@ -69,4 +71,11 @@ const Name = styled.div`
 const Height = styled.div`
 	color: #000;
 	font-size: 12px;
+`
+
+const Separator = styled.div`
+	width: 1px;
+	height: 12px;
+	background-color: #000;
+	margin: 0 8px;
 `
