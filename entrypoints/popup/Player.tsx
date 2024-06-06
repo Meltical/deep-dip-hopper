@@ -31,7 +31,7 @@ export const Player = (props: PlayerProps) => {
 		<Container onClick={handleClick} $has_no_twitch={has_no_twitch}>
 			<Name>{player.display_name}</Name>
 			<EndRow>
-				<Height>{Math.abs(player.height / 100 - 1).toFixed(0)}</Height>
+				<Height>{Math.max(player.height / 100 - 1, 0).toFixed(0)}</Height>
 				<Separator />
 				<Height>{player.height.toFixed(0)}</Height>
 				{has_no_twitch ? (
